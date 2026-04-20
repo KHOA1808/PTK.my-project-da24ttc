@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>Thiết kế form</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../cssPTK/style2.css">  
+</head>
+<body>
+    <div class="container">
+    <table border ="1" >
+    <caption>HÓA ĐƠN MUA HÀNG</caption>  
+    <tr>
+      <th>  Tên sản phẩm   </th>
+      <th>  Số lượng </th>
+      <th>  Đơn giá </th>
+      <th>  Thành tiền </th>
+    </tr>
+
+    <tr>
+      <td>A</td>
+      <td class="sl">4</td>
+      <td class ="dg">4000</td>
+      <td class ="tt"></td>
+    </tr>
+
+    <tr>
+      <td>B</td>
+      <td class="sl">5</td>
+      <td class ="dg">6000</td>
+      <td class ="tt"></td>
+    </tr>
+
+    <tr>
+      <td>C</td>
+      <td class="sl">3</td>
+      <td class ="dg">3000</td>
+      <td class ="tt"></td>
+    </tr>
+
+    <tr>
+      <td>D</td>
+      <td class="sl">6</td>
+      <td class ="dg">7000</td>
+      <td class ="tt"></td>
+    </tr>
+
+    <tr>
+      <td colspan="3">Tổng thanh toán</td>
+      <td id = "kq"></td>
+    </tr>
+
+    </table>
+    </div>
+    <script>
+      const soLuong = document.getElementbyClassName("sl");//list Collection truy xuat
+      const donGia=   document.getElementbyClassName("dg");
+      const thanhTien=document.getElementbyClassName("tt");
+      let tongThanhToan =0;
+      //Duyệt qua mỗi dòng
+      for(let i=0;i<soLuong.length;i++)
+      {
+        thanhTien[i].innerHTML=soLuong[i].innerHTML*donGia[i].innerHTML
+        tongThanhToan += parserInt(thanhTien[i].innerHTML);
+      } 
+     document.getElementbyId   ("kq").innerHTML=tongThanhToan;
+    </script>
+
+        
