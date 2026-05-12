@@ -1,168 +1,42 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-    <title>Thiết kế form</title>
+
     <meta charset="utf-8">
-    <link rel="stylesheet" href="../cssPTK/style7.css">
+
+    <title>Thiết kế form</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- File JS -->
+    <script src="../jsPTK/lib7.js"></script>
+
 </head>
 
 <body>
-    <div class="container">
-        <div class="product-list" id="product-list">
+
+    <div class="container mt-4">
+
+        <div
+            class="product-list row row-cols-1 row-cols-md-4 g-4"
+            id="product-list">
+
         </div>
+
     </div>
 
     <script>
-        
 
-    // Danh sách sản phẩm
-    const products = [
-        {
-            name: "Hạt giống hoa hồng Phấn",
-            price: "250000 / túi",
-            image: "../assetsPTK/imagesPTK/rose2.jpg"
-             
-        
-        },
-        {
-            name: "Hạt giống hoa Tulip",
-            price: "180000 / túi",
-            image: "../assetsPTK/imagesPTK/hoa tulip.png"
-             
-        },
-        {
-            name: "Hạt giống hoa Cúc",
-            price: "120000 / túi",
-            image: "../assetsPTK/imagesPTK/hoa-cuc.jfif"
-            
-        },
-        {
-            name: "Hạt giống hoa Lan",
-            price: "300000 / túi",
-            image: "../assetsPTK/imagesPTK/hoa-lan.jpg"
-        },
-        {
-            name: "Hạt giống hoa Mai",
-            price: "220000 / túi",
-            image: "../assetsPTK/imagesPTK/hoa-mai.jfif"
-        },
-        {
-            name: "Hạt giống hoa Đào",
-            price: "270000 / túi",
-            image: "../assetsPTK/imagesPTK/hoa-dao.jfif"
-        },
-        {
-            name: "Hạt giống hoa Sen",
-            price: "200000 / túi",
-            image: "../assetsPTK/imagesPTK/hoa-sen.png"
-        },
-        {
-            name: "Hạt giống hoa Ly",
-            price: "240000 / túi",
-            image: "../assetsPTK/imagesPTK/hoa-ly.jpg"
-        },
-        {
-            name: "Hạt giống hoa Hướng Dương",
-            price: "150000 / túi",
-            image: "../assetsPTK/imagesPTK/huong-duong.jpg"
-        },
-        {
-            name: "Hạt giống hoa Oải Hương",
-            price: "260000 / túi",
-            image: "../assetsPTK/imagesPTK/hoa-lavender.jfif"
-        }
-    ];
+        loadProduct(productList);
 
-    // Lấy product-list
-    const productList = document.getElementById("product-list");
-
-    // Lặp tạo sản phẩm
-    products.forEach(product => {
-
-        // product item
-        const productItem = document.createElement("div");
-        productItem.className = "product-item";
-
-        // image
-        const productImage = document.createElement("div");
-        productImage.className = "product-image";
-
-        const img = document.createElement("img");
-        img.src = product.image;
-        img.alt = product.name;
-
-        productImage.appendChild(img);
-
-        // info
-        const productInfo = document.createElement("div");
-        productInfo.className = "product-info";
-
-        const productName = document.createElement("p");
-        productName.textContent = product.name;
-
-        const productPrice = document.createElement("p");
-        productPrice.textContent = product.price;
-
-        productInfo.appendChild(productName);
-        productInfo.appendChild(productPrice);
-
-        // gắn vào item
-        productItem.appendChild(productImage);
-        productItem.appendChild(productInfo);
-
-        // hiển thị
-        productList.appendChild(productItem);
-
-    });
-        //Tạo thẻ div khung chứa 1 sản phẩm - product item
-        const productItem = document.createElement("div");
-
-        //Thêm thuộc tính cho thẻ div
-        productItem.setAttribute("class", "product-item");
-
-        //Tạo khung số 1 - chứa ảnh - product image
-        const productImage = document.createElement("div");
-
-        //Thêm thuộc tính cho thẻ div
-        productImage.setAttribute("class", "product-image");
-
-        //Thêm ảnh vào khung chứa
-        const myImage = document.createElement("img");
-        myImage.setAttribute("src", "../assetsPTK/imagesPTK/rose2.jpg");
-        myImage.setAttribute("alt", "Hạt giống hoa hồng Phấn");
-
-        //Gắn hình vào khung chứa product image
-        productImage.appendChild(myImage);
-
-        //Tạo khung số 2 - chứa thông tin sản phẩm - product info
-        const productInfo = document.createElement("div");
-
-        //Thêm thuộc tính cho thẻ div
-        productInfo.setAttribute("class", "product-info");
-
-        //Thêm đối tượng p - chứa tên sản phẩm
-        const productName = document.createElement("p");
-        const productNameText = document.createTextNode("Hạt giống hoa hồng Phấn");
-        productName.appendChild(productNameText);
-
-        //Gắn vào khung chứa
-        productInfo.appendChild(productName);
-
-        //Thêm đối tượng p - chứa giá
-        const productPrice = document.createElement("p");
-        const productPriceText = document.createTextNode("250000/ túi");
-        productPrice.appendChild(productPriceText);
-
-        //Gắn vào khung chứa
-        productInfo.appendChild(productPrice);
-
-        //Gắn 2 khung image và info vào product item
-        productItem.appendChild(productImage);
-        productItem.appendChild(productInfo);
-
-        //Gắn product item vào product list
-        document.getElementById("product-list").appendChild(productItem);
     </script>
 
 </body>
+
 </html>
