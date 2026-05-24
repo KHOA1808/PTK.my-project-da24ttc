@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lí sản phẩm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cream: #faf6f0;
+            --sage: #7a9e7e;
+            --sage-light: #a8c5ac;
+            --rose: #c87070;
+            --rose-light: #e8b4b4;
+            --charcoal: #2d2d2d;
+            --warm-gray: #8a8277;
+            --border: #e8e0d5;
+            --card-bg: #ffffff;
+            --danger-soft: #f8e8e8;
+            --success-soft: #e8f4e8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: var(--cream);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--charcoal);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            background: var(--charcoal);
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            color: #fff;
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: 0.02em;
+        }
+
+        .page-header .subtitle {
+            color: var(--sage-light);
+            font-size: 0.78rem;
+            margin-top: 2px;
+            font-weight: 300;
+        }
+
+        .btn-add-main {
+            background: var(--sage);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: background 0.2s;
+        }
+        .btn-add-main:hover { background: #5e8462; }
+
+        /* Stats bar */
+        .stats-bar {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 32px;
+            display: flex;
+            gap: 32px;
+            font-size: 0.82rem;
+            color: var(--warm-gray);
+        }
+        .stat-item strong {
+            color: var(--charcoal);
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: block;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            padding: 20px 32px 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+            max-width: 320px;
+        }
+        .search-wrap input {
+            width: 100%;
+            padding: 9px 14px 9px 38px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .search-wrap input:focus { border-color: var(--sage); }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--warm-gray);
+            font-size: 0.9rem;
+        }
+
+        .sort-select {
+            padding: 9px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            color: var(--charcoal);
+            outline: none;
+            cursor: pointer;
+        }
+        .sort-select:focus { border-color: var(--sage); }
+
+        .count-label {
+            margin-left: auto;
+            font-size: 0.82rem;
+            color: var(--warm-gray);
+        }
+
+        /* Table */
+        .table-wrap {
+            padding: 0 32px 32px;
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .product-table thead tr {
+            background: var(--charcoal);
+        }
+        .product-table thead th {
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 14px 18px;
+            border: none;
+        }
+
+        .product-table tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+        .product-table tbody tr:last-child { border-bottom: none; }
+        .product-table tbody tr:hover { background: #fdf9f5; }
+
+        .product-table tbody td {
+            padding: 14px 18px;
+            font-size: 0.88rem;
+            vertical-align: middle;
+            border: none;
+        }
+
+        .product-thumb {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .product-name-cell {
+            font-weight: 500;
+        }
+
+        .price-badge {
+            background: var(--danger-soft);
+            color: var(--rose);
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+
+        .id-badge {
+            background: #f0f0f0;
+            color: var(--warm-gray);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .desc-cell {
+            color: var(--warm-gray);
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-edit {
+            background: #f0f4f0;
+            color: var(--sage);
+            border: 1px solid var(--sage-light);
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-edit:hover { background: var(--sage); color: #fff; }
+
+        .btn-delete {
+            background: var(--danger-soft);
+            color: var(--rose);
+            border: 1px solid var(--rose-light);
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-delete:hover { background: var(--rose); color: #fff; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--warm-gray);
+        }
+        .empty-state .emoji { font-size: 2.5rem; }
+        .empty-state p { margin-top: 10px; font-size: 0.9rem; }
+
+        /* Modal */
+        .modal-content {
+            border: none;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: var(--charcoal);
+            color: #fff;
+            border: none;
+            padding: 18px 24px;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+            opacity: 0.7;
+        }
+
+        .modal-body { padding: 24px; }
+        .modal-footer { border-top: 1px solid var(--border); padding: 16px 24px; }
+
+        .form-label {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--warm-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 5px;
+        }
+
+        .form-control, .form-control:focus {
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            box-shadow: none;
+        }
+        .form-control:focus { border-color: var(--sage); }
+
+        .btn-save {
+            background: var(--sage);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 24px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+        }
+        .btn-save:hover { background: #5e8462; color: #fff; }
+
+        .btn-cancel {
+            background: #f0f0f0;
+            color: var(--charcoal);
+            border: none;
+            border-radius: 8px;
+            padding: 9px 18px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* Delete confirm modal */
+        .modal-delete .modal-header { background: var(--rose); }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+        }
+        .toast {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+        }
+        .toast.success { border-left: 4px solid var(--sage); }
+        .toast.danger { border-left: 4px solid var(--rose); }
+
+        @media (max-width: 768px) {
+            .page-header { padding: 16px 16px; }
+            .toolbar { padding: 16px 16px 8px; }
+            .table-wrap { padding: 0 16px 24px; }
+            .stats-bar { padding: 12px 16px; gap: 20px; }
+            .product-table thead th:nth-child(1),
+            .product-table tbody td:nth-child(1) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="page-header">
+    <div>
+        <h1>🌸 Quản lí sản phẩm</h1>
+        <div class="subtitle">Hoa Tươi &amp; Hạt Giống — Bảng điều khiển</div>
+    </div>
+    <button class="btn-add-main" onclick="openAddModal()">
+        <span>＋</span> Thêm sản phẩm
+    </button>
+</header>
+
+<!-- Stats -->
+<div class="stats-bar">
+    <div class="stat-item">
+        <strong id="stat-total">—</strong>
+        Tổng sản phẩm
+    </div>
+    <div class="stat-item">
+        <strong id="stat-min">—</strong>
+        Giá thấp nhất
+    </div>
+    <div class="stat-item">
+        <strong id="stat-max">—</strong>
+        Giá cao nhất
+    </div>
+    <div class="stat-item">
+        <strong id="stat-avg">—</strong>
+        Giá trung bình
+    </div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+    <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Tìm tên sản phẩm..." oninput="renderTable()">
+    </div>
+    <select class="sort-select" id="sort-select" onchange="renderTable()">
+        <option value="id-asc">ID: Tăng dần</option>
+        <option value="id-desc">ID: Giảm dần</option>
+        <option value="name-asc">Tên: A → Z</option>
+        <option value="name-desc">Tên: Z → A</option>
+        <option value="price-asc">Giá: Thấp → Cao</option>
+        <option value="price-desc">Giá: Cao → Thấp</option>
+    </select>
+    <div class="count-label" id="count-label"></div>
+</div>
+
+<!-- Table -->
+<div class="table-wrap">
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th>Ảnh</th>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Mô tả</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ===== Modal Thêm / Sửa ===== -->
+<div class="modal fade" id="formModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="formModalTitle">Thêm sản phẩm mới</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-index">
+
+                <div class="mb-3">
+                    <label class="form-label">ID sản phẩm</label>
+                    <input type="text" class="form-control" id="field-id" placeholder="VD: 11">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tên sản phẩm</label>
+                    <input type="text" class="form-control" id="field-name" placeholder="VD: Hoa hồng đỏ">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Giá (đơn vị: nghìn đồng)</label>
+                    <input type="number" class="form-control" id="field-price" placeholder="VD: 250">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">URL ảnh</label>
+                    <input type="text" class="form-control" id="field-image" placeholder="../assetsPTK/imagesPTK/...">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mô tả</label>
+                    <input type="text" class="form-control" id="field-desc" placeholder="Mô tả ngắn...">
+                </div>
+                <div class="mb-1">
+                    <label class="form-label">Link chi tiết</label>
+                    <input type="text" class="form-control" id="field-link" placeholder="product-detail.html?id=11">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel btn" data-bs-dismiss="modal">Huỷ</button>
+                <button type="button" class="btn-save btn" onclick="saveProduct()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Modal Xoá ===== -->
+<div class="modal fade modal-delete" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">Xác nhận xoá</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.9rem">Bạn có chắc muốn xoá sản phẩm <strong id="delete-name"></strong> không?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel btn" data-bs-dismiss="modal">Huỷ</button>
+                <button class="btn-delete btn" id="confirm-delete-btn">Xoá</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// DATA — copy từ lib7.js (trong thực tế dùng <script src>)
+// ============================================================
+let products = [
+    { id:"01", name:"Hạt giống hoa hồng Pháp", price:230, image:"../assetsPTK/imagesPTK/rose2.jpg",        productLink:"product-detail.html?id=01", desc:"ff" },
+    { id:"02", name:"Hoa hướng dương",          price:210, image:"../assetsPTK/imagesPTK/huong-duong.jpg",  productLink:"product-detail.html?id=02", desc:"lq" },
+    { id:"03", name:"Hoa tulip",                price:240, image:"../assetsPTK/imagesPTK/hoa-tulip.png",    productLink:"product-detail.html?id=03", desc:"delta force" },
+    { id:"04", name:"Hoa sen",                  price:250, image:"../assetsPTK/imagesPTK/hoa-sen.png",      productLink:"product-detail.html?id=04", desc:"block blast" },
+    { id:"05", name:"Hoa mai",                  price:260, image:"../assetsPTK/imagesPTK/hoa-mai.jpg",      productLink:"product-detail.html?id=05", desc:"chat gpt" },
+    { id:"06", name:"Hoa ly",                   price:270, image:"../assetsPTK/imagesPTK/hoa-ly.jpg",       productLink:"product-detail.html?id=06", desc:"claude" },
+    { id:"07", name:"Hoa lavender",             price:280, image:"../assetsPTK/imagesPTK/hoa-lavender.jpg", productLink:"product-detail.html?id=07", desc:"gemini" },
+    { id:"08", name:"Hoa lan",                  price:290, image:"../assetsPTK/imagesPTK/hoa-lan.jpg",      productLink:"product-detail.html?id=08", desc:"deepseek" },
+    { id:"09", name:"Hoa đào",                  price:300, image:"../assetsPTK/imagesPTK/hoa-dao.jpg",      productLink:"product-detail.html?id=09", desc:"PTK" },
+    { id:"10", name:"Hoa cúc",                  price:310, image:"../assetsPTK/imagesPTK/hoa-cuc.jpg",      productLink:"product-detail.html?id=10", desc:"PTC" },
+];
+
+// ============================================================
+// RENDER
+// ============================================================
+function getFiltered() {
+    const q = document.getElementById('search-input').value.toLowerCase().trim();
+    const sort = document.getElementById('sort-select').value;
+
+    let list = products.filter(p => p.name.toLowerCase().includes(q));
+
+    list.sort((a, b) => {
+        if (sort === 'id-asc')     return a.id.localeCompare(b.id);
+        if (sort === 'id-desc')    return b.id.localeCompare(a.id);
+        if (sort === 'name-asc')   return a.name.localeCompare(b.name, 'vi');
+        if (sort === 'name-desc')  return b.name.localeCompare(a.name, 'vi');
+        if (sort === 'price-asc')  return a.price - b.price;
+        if (sort === 'price-desc') return b.price - a.price;
+    });
+
+    return list;
+}
+
+function renderTable() {
+    const list = getFiltered();
+    const tbody = document.getElementById('table-body');
+    document.getElementById('count-label').textContent = `Hiển thị ${list.length} / ${products.length} sản phẩm`;
+
+    if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6">
+            <div class="empty-state">
+                <div class="emoji">🌿</div>
+                <p>Không tìm thấy sản phẩm nào.</p>
+            </div>
+        </td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = list.map(p => {
+        const realIdx = products.findIndex(x => x.id === p.id);
+        return `
+        <tr>
+            <td><img src="${p.image}" class="product-thumb" alt="${p.name}" onerror="this.src='https://placehold.co/52x52/e8e0d5/8a8277?text=🌸'"></td>
+            <td><span class="id-badge">${p.id}</span></td>
+            <td class="product-name-cell">${p.name}</td>
+            <td><span class="price-badge">${p.price}k</span></td>
+            <td class="desc-cell" title="${p.desc}">${p.desc}</td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn-edit" onclick="openEditModal(${realIdx})">✏️ Sửa</button>
+                    <button class="btn-delete" onclick="openDeleteModal(${realIdx})">🗑 Xoá</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+
+    updateStats();
+}
+
+function updateStats() {
+    const prices = products.map(p => p.price);
+    document.getElementById('stat-total').textContent = products.length;
+    document.getElementById('stat-min').textContent   = Math.min(...prices) + 'k';
+    document.getElementById('stat-max').textContent   = Math.max(...prices) + 'k';
+    document.getElementById('stat-avg').textContent   = Math.round(prices.reduce((a,b)=>a+b,0)/prices.length) + 'k';
+}
+
+// ============================================================
+// MODAL THÊM / SỬA
+// ============================================================
+const formModal = new bootstrap.Modal(document.getElementById('formModal'));
+
+function openAddModal() {
+    document.getElementById('formModalTitle').textContent = 'Thêm sản phẩm mới';
+    document.getElementById('edit-index').value = '';
+    ['id','name','price','image','desc','link'].forEach(f => document.getElementById('field-'+f).value = '');
+    formModal.show();
+}
+
+function openEditModal(idx) {
+    const p = products[idx];
+    document.getElementById('formModalTitle').textContent = 'Chỉnh sửa sản phẩm';
+    document.getElementById('edit-index').value = idx;
+    document.getElementById('field-id').value    = p.id;
+    document.getElementById('field-name').value  = p.name;
+    document.getElementById('field-price').value = p.price;
+    document.getElementById('field-image').value = p.image;
+    document.getElementById('field-desc').value  = p.desc;
+    document.getElementById('field-link').value  = p.productLink;
+    formModal.show();
+}
+
+function saveProduct() {
+    const id    = document.getElementById('field-id').value.trim();
+    const name  = document.getElementById('field-name').value.trim();
+    const price = parseInt(document.getElementById('field-price').value);
+    const image = document.getElementById('field-image').value.trim();
+    const desc  = document.getElementById('field-desc').value.trim();
+    const link  = document.getElementById('field-link').value.trim();
+
+    if (!id || !name || isNaN(price) || !image) {
+        showToast('Vui lòng điền đầy đủ ID, tên, giá và ảnh!', 'danger');
+        return;
+    }
+
+    const idx = document.getElementById('edit-index').value;
+    const newProduct = { id, name, price, image, productLink: link || `product-detail.html?id=${id}`, desc };
+
+    if (idx === '') {
+        // Kiểm tra ID trùng
+        if (products.find(p => p.id === id)) {
+            showToast(`ID "${id}" đã tồn tại!`, 'danger');
+            return;
+        }
+        products.push(newProduct);
+        showToast(`Đã thêm "${name}" thành công! 🌸`, 'success');
+    } else {
+        products[parseInt(idx)] = newProduct;
+        showToast(`Đã cập nhật "${name}" thành công! ✏️`, 'success');
+    }
+
+    formModal.hide();
+    renderTable();
+}
+
+// ============================================================
+// MODAL XOÁ
+// ============================================================
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+let pendingDeleteIdx = null;
+
+function openDeleteModal(idx) {
+    pendingDeleteIdx = idx;
+    document.getElementById('delete-name').textContent = products[idx].name;
+    deleteModal.show();
+}
+
+document.getElementById('confirm-delete-btn').addEventListener('click', () => {
+    if (pendingDeleteIdx === null) return;
+    const name = products[pendingDeleteIdx].name;
+    products.splice(pendingDeleteIdx, 1);
+    pendingDeleteIdx = null;
+    deleteModal.hide();
+    renderTable();
+    showToast(`Đã xoá "${name}". 🗑`, 'danger');
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const id = 'toast-' + Date.now();
+    const html = `
+    <div id="${id}" class="toast show ${type}" role="alert">
+        <div class="toast-body d-flex align-items-center gap-2">
+            ${message}
+            <button type="button" class="btn-close ms-auto" onclick="document.getElementById('${id}').remove()"></button>
+        </div>
+    </div>`;
+    container.insertAdjacentHTML('beforeend', html);
+    setTimeout(() => { const el = document.getElementById(id); if(el) el.remove(); }, 3500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderTable();
+</script>
+
+</body>
+</html>
